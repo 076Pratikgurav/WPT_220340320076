@@ -32,58 +32,44 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //var result;
 
-app.get("/getbookid",(req, resp)=> {
-	
-		let input=req.query.x;
-		console.log(input);
-		//console.log("reading input " + req.body.v1 +  "  second " + req.body.v2)
-		
-		let.output ={status:false,bookdetails:{bookid:00,bookname:'null',price:00}};
-		con.query('select * from book where bookid=?',[input],(error,rows)=>
-		{
-			if(rows.length > 0)
-			{
-				output.length=true;
-				output.bookdetails=rows[0];
-			}
-			resp.send(output);
-		});
-    	//var xyz ={ v1:37, v2:35};
-        //res.send(xyz);
-    });
-
-
-app.get('/updateBook',(req,resp) => {
-		let input ={
-			bookid: req.query.bookid,
-			bookname: req.query.bookname,
-			price: req.query.price,
-		};
-
-		let output =false;
-
-		cone.query('update book set bookname=?,price=? where bookid = ?',[input.bookname,input.price,input.bookid]),
-		(error,rows)=>{
-			console.log(rows);
-			if(error){
-				console.log(error);
-
-			}
-			else if(rows.affectedRows >0){
-				output=true;
-			}
-			console.log(output);
-			resp.send(output);
+app.get("/getbookdetails", (req, resp) => {
+	let input = req.query.x;
+  
+	let output = {
+	  status: false,
+	  bookdetails: { bookid: 0, bookname: "xyz", price: 0 },
+	};
+  
+	con.query("select * from book where bookid=?", [input], (err, rows) => {
+	  if (rows.length > 0) {
+		output.status = true;
+		output.bookdetails = rows[0];
+	  }
+	  resp.send(output);
+	});
+  });
+  
+  app.get("/updatebookdetails", (req, resp) => {
+	let bookid = req.query.x;
+	let price = req.query.z;
+  
+	let output = { status: false, bookdetails: { bookid: 0, price: 0 } };
+	con.query(
+	  "update book set price=? where bookid=?",
+	  [price, bookid],
+	  (err, rows) => {
+		if (err) {
+		  console.log("error occure" + toString(err));
+		} else if (rows.affectedRows > 0) {
+		  output.status = true;
 		}
-	
-        //console.log("reading input " + req.query.xyz);
+		resp.send(output);
+	  }
+	);
+  });
+
+
 		
-    	//var xyz ={ v1:37, v2:35};
-
-	
-
-
-		});
 
 	
 app.listen(900, function () {
